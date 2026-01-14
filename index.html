@@ -246,23 +246,21 @@
     <script>
         const REDIRECT_URL = "https://track.magicclick.partners/click?o=1014&a=24319";
         
-        // ЛОАДЕР (твой оригинал)
         let p = 0; const fill = document.getElementById('fill');
         const loadInt = setInterval(() => { 
             p += 5; if(p > 100) p = 100; fill.style.width = p + '%'; 
             if (p >= 100) { clearInterval(loadInt); setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-game').style.display = 'flex'; }, 300); } 
         }, 40);
 
-        // КОЛЕСО (твой оригинал)
         const spinBtn = document.getElementById('spin-btn');
         const wheelBox = document.getElementById('wheel-rotate-box');
         spinBtn.onclick = () => {
             wheelBox.style.transform = "rotate(3600deg)"; 
             spinBtn.disabled = true; 
-            setTimeout(() => { document.getElementById('modal').style.display = 'flex'; }, 4300); 
+            // ЗАДЕРЖКА ТЕПЕРЬ 3 СЕКУНДЫ (3000ms)
+            setTimeout(() => { document.getElementById('modal').style.display = 'flex'; }, 3000); 
         };
 
-        // КОПИРОВАНИЕ ПРОМОКОДА
         document.getElementById('copy-btn').onclick = function() {
             const code = document.getElementById('promo-code').innerText;
             navigator.clipboard.writeText(code);
