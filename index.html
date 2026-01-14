@@ -1,201 +1,255 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BÔNUS EXCLUSIVO - 500%</title>
+    <title>Big Bass Bonanza - VIP Bônus</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { 
+            width: 100%; height: 100%; overflow: hidden; 
+            font-family: 'Arial Black', sans-serif; 
+            background: #004d7a; 
+        }
+
+        /* ЛОАДЕР */
+        #loader {
+            position: fixed; inset: 0; z-index: 1000;
+            background: url('images/page-bg.webp') no-repeat center center; background-size: cover;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .progress-bar { width: 260px; height: 18px; background: rgba(0,0,0,0.6); border-radius: 20px; border: 2px solid #fff; margin-top: 20px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff8c00, #ff0000); transition: width 0.1s; }
+
+        /* ИГРОВАЯ ЗОНА */
+        #main-game {
+            position: relative; width: 100%; height: 100vh;
+            background: url('images/page-bg.webp') no-repeat center center; background-size: cover;
+            display: none; flex-direction: column; align-items: center;
+        }
+
+        .top-logo { 
+            width: 320px; margin-top: 20px; z-index: 10; 
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6)); 
+            animation: slow-pulse 4s infinite ease-in-out;
+        }
+        @keyframes slow-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* ВОДОРОСЛИ */
+        .seaweed {
+            position: absolute; width: 180px; z-index: 4; pointer-events: none;
+            animation: seaweed-float 5s infinite ease-in-out;
+        }
+        @keyframes seaweed-float {
+            0%, 100% { transform: rotate(0deg) translate(0, 0); }
+            50% { transform: rotate(3deg) translate(10px, 5px); }
+        }
+        .group-top-left { top: 15%; left: 20%; }
+        .group-top-top { top: 10%; right: 20%; animation-delay: 1s; }
+        .group-bottom-left { bottom: 15%; left: 25%; animation-delay: 0.5s; }
+        .group-bottom-right { bottom: 15%; right: 25%; animation-delay: 1.5s; }
+
+        /* ПЕРСОНАЖИ */
+        .character-left { position: absolute; left: 60px; bottom: -10px; height: 80vh; z-index: 5; pointer-events: none; animation: char-float-left 7s infinite ease-in-out; }
+        .character-right { position: absolute; right: 10px; bottom: -10px; height: 80vh; z-index: 5; pointer-events: none; animation: char-float-right 6s infinite ease-in-out; }
+        @keyframes char-float-left { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, 25px); } }
+        @keyframes char-float-right { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, 20px); } }
+
+        /* КОЛЕСО */
+        .wheel-container { position: relative; margin-top: 5px; width: 420px; height: 420px; z-index: 8; }
+        .wheel-around { position: absolute; inset: 0; width: 100%; z-index: 1; }
+        .wheel-pointer { 
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%); 
+            width: 0; height: 0; border-left: 25px solid transparent; border-right: 25px solid transparent;
+            border-top: 40px solid #ffeb3b; z-index: 15; filter: drop-shadow(0 4px 5px rgba(0,0,0,0.5));
+        }
+        .wheel-main { 
+            position: absolute; inset: 20px; width: calc(100% - 40px); z-index: 2; 
+            transition: transform 2.7s cubic-bezier(0.15, 0, 0.15, 1); 
+        }
+        .wheel-center-circle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 70px; height: 70px; background: radial-gradient(circle, #ffeb3b, #ff9800);
+            border: 4px solid #fff; border-radius: 50%; z-index: 10; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* ТЕКСТ НА КОЛЕСЕ */
+        .wheel-text-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+        .sector-text {
+            position: absolute; top: 50%; left: 50%; width: 180px; height: 50px;
+            margin-top: -25px; transform-origin: left center;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 20px; text-align: center;
+        }
+        .val { font-size: 22px; font-weight: 900; color: #fdfdfd; text-shadow: 1px 1px 2px #000; line-height: 1; }
+        .sub { font-size: 11px; font-weight: 900; color: #ffe066; text-shadow: 1px 1px 1px #000; text-transform: uppercase; }
         
-        body {
-            background: url('images/bg.webp') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* Верхний баннер */
-        .top-banner {
-            width: 100%;
-            padding: 15px;
-            text-align: center;
-            z-index: 10;
-        }
-        .top-banner img {
-            max-width: 220px;
-            filter: drop-shadow(0 0 10px rgba(255,204,0,0.5));
-        }
-
-        /* Контейнер колеса */
-        .wheel-container {
-            position: relative;
-            width: 90vw;
-            max-width: 400px;
-            margin-top: 20px;
-        }
-        .wheel-main {
-            width: 100%;
-            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-        }
-        .wheel-pointer {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            z-index: 5;
-        }
-
-        /* Кнопка крутить */
-        .spin-btn {
-            margin-top: 25px;
-            padding: 15px 50px;
-            font-size: 24px;
-            font-weight: 900;
-            color: #000;
-            background: linear-gradient(180deg, #ffcc00 0%, #ff9900 100%);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Модальное окно */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .modal-content {
-            background: #1a1a1a;
-            border: 3px solid #ffcc00;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            color: #fff;
-            max-width: 400px;
-            width: 100%;
-        }
-        .modal-content h2 { color: #ffcc00; font-size: 32px; margin-bottom: 10px; }
-        .bonus-amount { font-size: 60px; font-weight: 900; color: #fff; margin: 10px 0; text-shadow: 0 0 20px #ffcc00; }
+        .s1 { transform: rotate(-90deg); }  
+        .s1.super-bonus .val { font-size: 28px; color: #ffeb3b; text-shadow: 0 0 10px rgba(255, 235, 59, 0.4), 2px 2px 2px #000; animation: pulse-gold 1.2s infinite ease-in-out; }
+        .s1.super-bonus .sub { background: #cc0000; color: #fff; padding: 2px 8px; border: 1.5px solid #ffeb3b; border-radius: 5px; font-size: 10px; margin-top: 3px; }
+        @keyframes pulse-gold { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         
-        /* Стили промокода */
-        .promo-box {
-            background: rgba(255,255,255,0.05);
+        .s2 { transform: rotate(-45deg); } .s3 { transform: rotate(0deg); } .s4 { transform: rotate(45deg); } 
+        .s5 { transform: rotate(90deg); } .s6 { transform: rotate(135deg); } .s7 { transform: rotate(180deg); } .s8 { transform: rotate(225deg); }  
+        .txt-box { display: flex; flex-direction: column; align-items: center; }
+
+        /* КНОПКА */
+        .btn-spin {
+            position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 300px; height: 85px; border: none; cursor: pointer;
+            background: url('images/button_left.webp') no-repeat left, url('images/button_right.webp') no-repeat right, url('images/button_middle.webp') repeat-x center;
+            background-size: contain; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 32px; font-weight: 900; z-index: 20; text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+            animation: button-pulse 1.8s infinite ease-in-out;
+        }
+        @keyframes button-pulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.06); } }
+        .btn-spin:disabled { animation: none; opacity: 0.6; }
+
+        /* МОДАЛКА */
+        .modal { 
+            position: fixed; inset: 0; 
+            background: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(8px); 
+            display: none; justify-content: center; align-items: center; 
+            z-index: 100; 
+        }
+        .modal-content { 
+            background: radial-gradient(circle, #004080 0%, #001a33 100%); 
+            border: 3px solid #ffcc00; 
+            border-radius: 25px; 
+            width: 90%; max-width: 400px; 
+            padding: 30px 20px; 
+            text-align: center; 
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
+            animation: modalShow 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28), borderPulse 2s infinite alternate; 
+        }
+        @keyframes modalShow { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes borderPulse { from { border-color: #ffcc00; } to { border-color: #fffb00; } }
+
+        .modal-content h2 { color: #ffcc00; font-size: 38px; font-weight: 900; margin-bottom: 5px; }
+        .bonus-amount { 
+            font-size: 80px; font-weight: 900; color: #fff; margin: 5px 0; 
+            text-shadow: 0 0 20px #ffcc00; line-height: 1;
+        }
+        .deposit-text { color: #ffffff; font-size: 16px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
+
+        /* БЛОК ПРОМОКОДА */
+        .promo-container {
+            margin: 15px 0;
+            background: rgba(0,0,0,0.3);
             border: 2px dashed #ffcc00;
-            padding: 15px;
             border-radius: 12px;
-            margin: 20px 0;
+            padding: 10px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+            transition: 0.3s;
         }
-        #promo-code { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: 2px; }
-        .copy-badge { background: #ffcc00; color: #000; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        .promo-container:active { transform: scale(0.95); }
+        .promo-label { color: #ffcc00; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .promo-code-text { color: #fff; font-size: 28px; font-weight: 900; letter-spacing: 2px; }
+        .copy-hint { color: #00ffff; font-size: 10px; margin-top: 5px; display: block; }
 
-        .btn-claim {
-            width: 100%;
-            padding: 18px;
-            font-size: 20px;
-            font-weight: 900;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            text-transform: uppercase;
+        .btn-claim { 
+            width: 100%; padding: 18px; 
+            background: #28a745; color: white; border: 2px solid #fff; border-radius: 50px; 
+            font-size: 24px; font-weight: 900; cursor: pointer; margin-top: 10px;
         }
+        .footer-text { color: #ffffff; font-size: 12px; margin-top: 15px; opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <div class="top-banner">
-        <img src="images/logo.webp" alt="Logo">
+    <div id="loader">
+        <img src="images/logo.webp" class="top-logo">
+        <div class="progress-bar"><div id="fill" class="progress-fill"></div></div>
     </div>
 
-    <div class="wheel-container">
-        <img src="images/pointer.webp" class="wheel-pointer">
-        <img src="images/wheel.webp" id="wheel" class="wheel-main">
-    </div>
+    <div id="main-game">
+        <img src="images/group-top-left.webp" class="seaweed group-top-left">
+        <img src="images/group-top-top.webp" class="seaweed group-top-top">
+        <img src="images/group-bottom-left.webp" class="seaweed group-bottom-left">
+        <img src="images/group-bottom-right.webp" class="seaweed group-bottom-right">
 
-    <button id="spin-btn" class="spin-btn">GIRAR AGORA!</button>
+        <img src="images/logo.webp" class="top-logo">
+        
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <img src="images/wheel-around.webp" class="wheel-around">
+            <div id="wheel-rotate-box" class="wheel-main">
+                <img src="images/wheel-en.webp" style="width: 100%;">
+                <div class="wheel-center-circle"></div>
+                <div class="wheel-text-layer">
+                    <div class="sector-text s1 super-bonus"><div class="txt-box"><span class="val">+500%</span><span class="sub">SUPER BÔNUS</span></div></div>
+                    <div class="sector-text s2"><div class="txt-box"><span class="val">+10%</span></div></div>
+                    <div class="sector-text s3"><div class="txt-box"><span class="val">+50%</span></div></div>
+                    <div class="sector-text s4"><div class="txt-box"><span class="val">+100%</span></div></div>
+                    <div class="sector-text s5"><div class="txt-box"><span class="val">+150%</span></div></div>
+                    <div class="sector-text s6"><div class="txt-box"><span class="val">+200%</span></div></div>
+                    <div class="sector-text s7"><div class="txt-box"><span class="val">+50%</span></div></div>
+                    <div class="sector-text s8"><div class="txt-box"><span class="val">+100%</span></div></div>
+                </div>
+            </div>
+        </div>
+
+        <img src="images/left-person.webp" class="character-left">
+        <img src="images/right-person.webp" class="character-right">
+        <button id="spin-btn" class="btn-spin">GIRAR</button>
+    </div>
 
     <div id="modal" class="modal">
         <div class="modal-content">
             <h2>PARABÉNS!</h2>
-            <p>VOCÊ GANHOU</p>
+            <p>VOCÊ GANHOU UM</p>
             <div class="bonus-amount">+500%</div>
-            <p>AO PRIMEIRO DEPÓSITO</p>
+            <div class="deposit-text">AO PRIMEIRO DEPÓSITO</div>
             
-            <div class="promo-box" id="promo-click">
-                <span id="promo-code">TIKBR777</span>
-                <span id="copy-text" class="copy-badge">COPIAR</span>
+            <div class="promo-container" id="promo-btn">
+                <div class="promo-label">CÓDIGO PROMOCIONAL:</div>
+                <div class="promo-code-text" id="code-val">TIKBR777</div>
+                <span class="copy-hint" id="copy-status">CLIQUE PARA COPIAR</span>
             </div>
 
             <button id="claim-btn" class="btn-claim">RESGATAR AGORA</button>
+            <div class="footer-text">*Oferta válida por tempo limitado</div>
         </div>
     </div>
 
     <script>
-        const wheel = document.getElementById('wheel');
+        const REDIRECT_URL = "https://track.magicclick.partners/click?o=1014&a=24319";
+        
+        // Лоадер
+        let p = 0; const fill = document.getElementById('fill');
+        const loadInt = setInterval(() => { 
+            p += 5; if(p > 100) p = 100; fill.style.width = p + '%'; 
+            if (p >= 100) { clearInterval(loadInt); setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-game').style.display = 'flex'; }, 300); } 
+        }, 40);
+
+        // Колесо
         const spinBtn = document.getElementById('spin-btn');
-        const modal = document.getElementById('modal');
-        const claimBtn = document.getElementById('claim-btn');
-        const promoClick = document.getElementById('promo-click');
-
-        // Твоя партнерская ссылка
-        const affiliateLink = "https://magicclick.partners/настрой_свою_ссылку";
-
-        spinBtn.addEventListener('click', () => {
-            spinBtn.disabled = true;
-            spinBtn.style.animation = 'none';
-            spinBtn.style.opacity = '0.5';
-            
-            // Крутим на 1800 градусов + случайный сектор
-            const rotation = 1800 + Math.floor(Math.random() * 360);
-            wheel.style.transform = `rotate(${rotation}deg)`;
-
-            setTimeout(() => {
-                modal.style.display = 'flex';
-            }, 4500);
-        });
+        const wheelBox = document.getElementById('wheel-rotate-box');
+        spinBtn.onclick = () => {
+            wheelBox.style.transform = "rotate(3600deg)"; 
+            spinBtn.disabled = true; 
+            setTimeout(() => { document.getElementById('modal').style.display = 'flex'; }, 4300); 
+        };
 
         // Копирование промокода
-        promoClick.addEventListener('click', () => {
-            const code = document.getElementById('promo-code').innerText;
+        document.getElementById('promo-btn').onclick = function() {
+            const code = document.getElementById('code-val').innerText;
             navigator.clipboard.writeText(code);
-            
-            const badge = document.getElementById('copy-text');
-            badge.innerText = "COPIADO!";
-            badge.style.background = "#fff";
-            
+            const status = document.getElementById('copy-status');
+            status.innerText = "COPIADO COM SUCESSO!";
+            status.style.color = "#28a745";
             setTimeout(() => {
-                badge.innerText = "COPIAR";
-                badge.style.background = "#ffcc00";
-            }, 2000);
-        });
+                status.innerText = "CLIQUE PARA COPIAR";
+                status.style.color = "#00ffff";
+            }, 2500);
+        };
 
-        // Переход по ссылке
-        claimBtn.addEventListener('click', () => {
-            window.location.href = affiliateLink;
-        });
+        // Редирект
+        document.getElementById('claim-btn').onclick = () => { window.location.href = REDIRECT_URL; };
     </script>
 </body>
 </html>
